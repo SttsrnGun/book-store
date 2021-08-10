@@ -26,7 +26,7 @@ class UserFixtures extends Fixture
         $user->setRoles($user->getRoles());
         $user->setPassword($this->passwordHasher->hashPassword(
             $user,
-            'the_new_password'
+            '00000000'
         ));
         $manager->persist($user);
 
