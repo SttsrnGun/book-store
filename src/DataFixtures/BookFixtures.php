@@ -5,18 +5,22 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Book;
+use App\Enum\BookTag;
 
 class BookFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
+        $bookTagArray = array_values(BookTag::toArray());
+        array_push($bookTagArray,null);
         $bookData = file_get_contents('src\DataFixtures\bookData.json');
         $bookList = json_decode($bookData, true);
-        // var_dump($bookData); // show contents
+
         foreach ($bookList as $item) {
             $book = new Book();
             $book->setName($item['title']);
             $book->setDetail($item['summary']);
+            $book->setTag([$bookTagArray[rand(0,2)]]);
             $book->setPrice($item['price']['displayValue']*33);
             $book->setAbout($item['author']);
             $book->setImagePath($item['image']);

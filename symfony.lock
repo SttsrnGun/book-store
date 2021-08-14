@@ -1,4 +1,7 @@
 {
+    "acelaya/doctrine-enum-type": {
+        "version": "v2.5.0"
+    },
     "api-platform/api-pack": {
         "version": "v1.3.0"
     },
@@ -140,6 +143,9 @@
         "files": [
             "./config/packages/lexik_jwt_authentication.yaml"
         ]
+    },
+    "myclabs/php-enum": {
+        "version": "1.8.3"
     },
     "namshi/jose": {
         "version": "7.2.3"

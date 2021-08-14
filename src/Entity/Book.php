@@ -9,6 +9,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
+use App\Enum\BookTag;
+use Acelaya\Doctrine\Type\PhpEnumType;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
+PhpEnumType::registerEnumTypes([
+    BookTag::class,
+]);
 
 /**
  * @ApiResource()
@@ -16,6 +23,9 @@ use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
  * @ApiFilter(PropertyFilter::class, arguments={
  *      "parameterName": "properties", 
  *      "overrideDefaultProperties": false, 
+ * })
+ * @ApiFilter(SearchFilter::class, properties={
+ *      "tag": "partial",
  * })
  */
 class Book
@@ -56,6 +66,11 @@ class Book
      * @ORM\OneToMany(targetEntity=ReviewBook::class, mappedBy="book")
      */
     private $reviewBooks;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $tag = [];
 
     public function __construct()
     {
@@ -170,6 +185,18 @@ class Book
                 $reviewBook->setBook(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTag(): ?array
+    {
+        return $this->tag;
+    }
+
+    public function setTag(?array $tag): self
+    {
+        $this->tag = $tag;
 
         return $this;
     }
