@@ -7,6 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -32,20 +36,42 @@ class UserController extends AbstractController
     /**
      * @Route("/users/mef", name="userMe")
      */
-    public function getUserMe(): ?User
-    {
-        $token = $this->tokenStorage->getToken();
+    // public function getUserMe(): ?User
+    // {
+    //     $token = $this->tokenStorage->getToken();
         
-        if (!$token) {
-            return null;
-        }
+    //     if (!$token) {
+    //         return null;
+    //     }
 
-        $user = $token->getUser();
+    //     $user = $token->getUser();
 
-        if (!$user instanceof User) {
-            return null;
-        }
+    //     if (!$user instanceof User) {
+    //         return null;
+    //     }
 
-        return $user;
+    //     return $user;
+    // }
+
+    /**
+     * @Route("/api/users/register", name="userRegister")
+     */
+    public function getUserRegister(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $payload = json_decode($request->getContent(), true);
+        $email = $payload['email'];
+        $password = $payload['password'];
+
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles($user->getRoles());
+        $user->setPassword($passwordHasher->hashPassword(
+            $user,
+            $password
+        ));
+        $entityManager->persist($user);
+        $entityManager->flush();
+        
+        return new JsonResponse($payload, 200);
     }
 }
