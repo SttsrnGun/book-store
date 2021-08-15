@@ -22,7 +22,7 @@ class BookController extends AbstractController
         ]);
     }
     /**
-     * @Route("/api/search/book", name="search book by name, detail, about")
+     * @Route("/api/search/book", name="search book by name, detail, about"  )
      */
     public function searchBook(Request $request,EntityManagerInterface $entityManager): Response{
         $keyword = $request->query->get('keyword');

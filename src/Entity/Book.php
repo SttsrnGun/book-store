@@ -26,6 +26,9 @@ PhpEnumType::registerEnumTypes([
  * })
  * @ApiFilter(SearchFilter::class, properties={
  *      "tag": "partial",
+ *      "id": "exact",
+ *      "owner": "exact",
+ *      "isHidden": "exact",
  * })
  */
 class Book
@@ -72,9 +75,35 @@ class Book
      */
     private $tag = [];
 
+    /**
+     * @ORM\OneToMany(targetEntity=Cart::class, mappedBy="book")
+     */
+    private $carts;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $owner;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $createAt;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isHidden;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $discount;
+
     public function __construct()
     {
         $this->reviewBooks = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,6 +226,84 @@ class Book
     public function setTag(?array $tag): self
     {
         $this->tag = $tag;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cart[]
+     */
+    public function getCarts(): Collection
+    {
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart): self
+    {
+        if (!$this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(Cart $cart): self
+    {
+        if ($this->carts->removeElement($cart)) {
+            // set the owning side to null (unless already changed)
+            if ($cart->getBook() === $this) {
+                $cart->setBook(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getCreateAt(): ?\DateTimeImmutable
+    {
+        return $this->createAt;
+    }
+
+    public function setCreateAt(\DateTimeImmutable $createAt): self
+    {
+        $this->createAt = $createAt;
+
+        return $this;
+    }
+
+    public function getIsHidden(): ?bool
+    {
+        return $this->isHidden;
+    }
+
+    public function setIsHidden(bool $isHidden): self
+    {
+        $this->isHidden = $isHidden;
+
+        return $this;
+    }
+
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(?float $discount): self
+    {
+        $this->discount = $discount;
 
         return $this;
     }

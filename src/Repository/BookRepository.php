@@ -51,20 +51,15 @@ class BookRepository extends ServiceEntityRepository
     /**
      * @return Book[] Returns an array of Book objects
     */
-    
     public function findByKeyword($keyword,$limit)
     {
-        // dd($this);
-        // $this->select(array('name',
-        // 'detail',
-        // 'about'));
         return $this->createQueryBuilder('b')
             ->where('b.name LIKE :val')
             ->setParameter('val', '%'.$keyword.'%')
-            // ->orWhere('b.detail LIKE :val')
-            // ->setParameter('val', '%'.$keyword.'%')
-            // ->orWhere('b.about LIKE :val')
-            // ->setParameter('val', '%'.$keyword.'%')
+            ->orWhere('b.detail LIKE :val')
+            ->setParameter('val', '%'.$keyword.'%')
+            ->orWhere('b.about LIKE :val')
+            ->setParameter('val', '%'.$keyword.'%')
             ->orderBy('b.name', 'ASC')
             ->setMaxResults($limit)
             ->getQuery()
