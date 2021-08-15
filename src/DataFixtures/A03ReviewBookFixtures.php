@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\ReviewBook;
 use App\Entity\Book;
 
-class ReviewBookFixtures extends Fixture
+class A03ReviewBookFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {

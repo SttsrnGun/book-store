@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
 
-class UserFixtures extends Fixture
+class A01UserFixtures extends Fixture
 {
     private $passwordHasher;
     
@@ -18,9 +18,7 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        // $2y$13$56f7QcBgK2DKm4ntV6.MjO7byHEGVYf6VwNCxuT2Ympo9sxmpdIdi
+        // dd(new \Datetime());
         $user = new User();
         $user->setEmail('test@email.com');
         $user->setRoles($user->getRoles());
@@ -29,6 +27,16 @@ class UserFixtures extends Fixture
             '00000000'
         ));
         $manager->persist($user);
+        for ($i=0; $i < 5; $i++) { 
+            $user = new User();
+            $user->setEmail($i.'test@email.com');
+            $user->setRoles($user->getRoles());
+            $user->setPassword($this->passwordHasher->hashPassword(
+                $user,
+                '00000000'
+            ));
+            $manager->persist($user);
+        }
 
         $manager->flush();
     }

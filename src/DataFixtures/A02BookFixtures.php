@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Book;
 use App\Enum\BookTag;
 
-class BookFixtures extends Fixture
+class A02BookFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
@@ -24,8 +24,13 @@ class BookFixtures extends Fixture
             $book->setPrice($item['price']['displayValue']*33);
             $book->setAbout($item['author']);
             $book->setImagePath($item['image']);
+            $book->setCreateAt(new \DateTimeImmutable());
+            $book->setIsHidden(rand(true,false));
+            $book->setDiscount(rand(0,$book->getPrice()));
             $manager->persist($book);
         }
+
+
         // for ($i=0; $i < 20; $i++) { 
         //     $book = new Book();
         //     $book->setName('ฟื้นคืน REVIVAL'.$i);
