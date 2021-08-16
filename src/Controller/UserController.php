@@ -39,7 +39,7 @@ class UserController extends AbstractController
     // public function getUserMe(): ?User
     // {
     //     $token = $this->tokenStorage->getToken();
-        
+
     //     if (!$token) {
     //         return null;
     //     }
@@ -56,22 +56,25 @@ class UserController extends AbstractController
     /**
      * @Route("/api/users/register", name="userRegister")
      */
-    public function getUserRegister(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher): Response
+    public function getUserRegister(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $payload = json_decode($request->getContent(), true);
         $email = $payload['email'];
         $password = $payload['password'];
 
-        $user = new User();
-        $user->setEmail($email);
-        $user->setRoles($user->getRoles());
-        $user->setPassword($passwordHasher->hashPassword(
-            $user,
-            $password
-        ));
-        $entityManager->persist($user);
-        $entityManager->flush();
-        
+        try {
+            $user = new User();
+            $user->setEmail($email);
+            $user->setRoles($user->getRoles());
+            $user->setPassword($passwordHasher->hashPassword(
+                $user,
+                $password
+            ));
+            $entityManager->persist($user);
+            $entityManager->flush();
+        } catch (\Throwable $th) {
+            return new JsonResponse($th->getMessage(), 400);
+        }
         return new JsonResponse($payload, 200);
     }
 }

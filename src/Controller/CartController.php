@@ -39,7 +39,7 @@ class CartController extends AbstractController
     /**
      * @Route("/api/cart/add", name="addCart", methods={"POST"})
      */
-    public function addCart(Request $request,EntityManagerInterface $entityManager): Response
+    public function addCart(Request $request, EntityManagerInterface $entityManager): Response
     {
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
@@ -47,18 +47,18 @@ class CartController extends AbstractController
         $payload = json_decode($request->getContent(), true);
         $bookId = $payload['bookId'];
         $amount = $payload['amount'];
-        
-        $cartArray = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId(),$bookId);
-        if($cartArray){ //update
+
+        $cartArray = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId(), $bookId);
+        if ($cartArray) { //update
             $cartObj = $entityManager->getRepository(Cart::class)->find($cartArray[0]['id']);
-            if($amount==0){ //delete
+            if ($amount == 0) { //delete
                 $cartObj->setDeletedAt(new \DateTime());
-            }else{
+            } else {
                 $cartObj->setAmount($amount);
             }
             $entityManager->persist($cartObj);
             $entityManager->flush();
-        }else{ //insert
+        } else { //insert
             $book = $entityManager->getRepository(Book::class)->find($bookId);
             $cart = new Cart();
             $cart->setUser($user);
@@ -67,21 +67,24 @@ class CartController extends AbstractController
             $entityManager->persist($cart);
             $entityManager->flush();
         }
-        
+
         return new JsonResponse($payload, 200);
     }
 
     /**
      * @Route("/api/carts/me", name="getCartMe")
      */
-    public function getCartMe(Request $request,EntityManagerInterface $entityManager): Response
+    public function getCartMe(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $bookId = $request->query->get('bookId');
-        $token = $this->tokenStorage->getToken();
-        $user = $token->getUser();
+        try {
+            $bookId = $request->query->get('bookId');
+            $token = $this->tokenStorage->getToken();
+            $user = $token->getUser();
 
-        $cart = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId(),$bookId);
-        
+            $cart = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId(), $bookId);
+        } catch (\Throwable $th) {
+            return new JsonResponse($th->getMessage(), 400);
+        }
         return new JsonResponse($cart, 200);
     }
 
@@ -92,40 +95,45 @@ class CartController extends AbstractController
     {
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
-        
-        $cartArray = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId());
-        foreach($cartArray as $cart){
-            $cartObj = $entityManager->getRepository(Cart::class)->find($cart['id']);
-            $cartObj->setDeletedAt(new \DateTime());
-            $entityManager->persist($cartObj);
+        try {
+            $cartArray = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId());
+            foreach ($cartArray as $cart) {
+                $cartObj = $entityManager->getRepository(Cart::class)->find($cart['id']);
+                $cartObj->setDeletedAt(new \DateTime());
+                $entityManager->persist($cartObj);
+            }
+            $entityManager->flush();
+        } catch (\Throwable $th) {
+            return new JsonResponse($th->getMessage(), 400);
         }
-        $entityManager->flush();
-
         return new JsonResponse($cart, 200);
     }
-    
+
     /**
      * @Route("/api/carts/summary", name="getCartSummary")
      */
-    public function getCartSummary(Request $request,EntityManagerInterface $entityManager): Response
+    public function getCartSummary(Request $request, EntityManagerInterface $entityManager): Response
     {
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
         $sumPrice = 0;
         $deliver = 20;
         $netPrice = 0;
-
-        $cart = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId());
-        foreach ($cart as $item) {
-            $price = $item['book']['price'];
-            $discount = $item['book']['discount'];
-            if(!$discount){
-                $discount = 0;
+        try {
+            $cart = $entityManager->getRepository(Cart::class)->findByUserBook($user->getId());
+            foreach ($cart as $item) {
+                $price = $item['book']['price'];
+                $discount = $item['book']['discount'];
+                $amount = $item['amount'];
+                if (!$discount) {
+                    $discount = 0;
+                }
+                $sumPrice += ($price - $discount) * $amount;
             }
-            $sumPrice += $price - $discount;
+            $netPrice = $sumPrice - $deliver;
+        } catch (\Throwable $th) {
+            return new JsonResponse($th->getMessage(), 400);
         }
-        $netPrice = $sumPrice-$deliver;
-
         return new JsonResponse([
             'sumPrice' => $sumPrice,
             'deliver' => $deliver,
@@ -133,4 +141,3 @@ class CartController extends AbstractController
         ], 200);
     }
 }
-
