@@ -198,6 +198,7 @@ class BookController extends AbstractController
 
             if ($book->getOwner() && ($book->getOwner()->getId() == $user->getId())) {
                 $book->setDeletedAt(new \DateTimeImmutable());
+                $book->setIsHidden(true);
                 $entityManager->persist($book);
                 $entityManager->flush();
             }
