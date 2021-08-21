@@ -31,7 +31,7 @@ class ReviewBook
     private $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=AppUser::class)
      */
     private $user;
 
@@ -64,12 +64,12 @@ class ReviewBook
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?AppUser
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?AppUser $user): self
     {
         $this->user = $user;
 

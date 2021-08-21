@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\UserRepository;
+use App\Repository\AppUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +16,7 @@ use App\Controller\GetMeAction;
  *     itemOperations={
  *         "get_me"={
  *             "method"="GET",
- *             "path"="/users/me",
+ *             "path"="/app_users/me",
  *             "controller"=GetMeAction::class,
  *             "openapi_context"={
  *                 "parameters"={}
@@ -25,9 +25,9 @@ use App\Controller\GetMeAction;
  *         }
  *     }
  * )
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Entity(repositoryClass=AppUserRepository::class)
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id

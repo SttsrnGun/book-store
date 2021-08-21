@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\AppUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -10,11 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class GetMeAction extends AbstractController
 {
     /**
-     * @return User
+     * @return AppUser
      */
-    public function __invoke(): User
+    public function __invoke(): AppUser
     {
-        /** @var User $user */
+        /** @var AppUser $user */
         $user = $this->getUser();
 
         return $user;

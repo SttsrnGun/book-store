@@ -5,14 +5,14 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\User;
+use App\Entity\AppUser;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserController extends AbstractController
+class AppUserController extends AbstractController
 {
     /**
      * @var TokenStorageInterface
@@ -25,18 +25,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user", name="user")
+     * @Route("/app_users/mef", name="userMe")
      */
-    public function index(): Response
-    {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
-    }
-    /**
-     * @Route("/users/mef", name="userMe")
-     */
-    // public function getUserMe(): ?User
+    // public function getUserMe(): ?AppUser
     // {
     //     $token = $this->tokenStorage->getToken();
 
@@ -54,7 +45,7 @@ class UserController extends AbstractController
     // }
 
     /**
-     * @Route("/api/users/register", name="userRegister")
+     * @Route("/api/app_users/register", name="userRegister")
      */
     public function getUserRegister(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -63,7 +54,7 @@ class UserController extends AbstractController
         $password = $payload['password'];
 
         try {
-            $user = new User();
+            $user = new AppUser();
             $user->setEmail($email);
             $user->setRoles($user->getRoles());
             $user->setPassword($passwordHasher->hashPassword(

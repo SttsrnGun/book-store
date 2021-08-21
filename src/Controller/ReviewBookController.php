@@ -11,7 +11,7 @@ use App\Entity\ReviewBook;
 use App\Entity\Book;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use App\Entity\User;
+use App\Entity\AppUser;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ReviewBookController extends AbstractController

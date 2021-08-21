@@ -5,14 +5,14 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Book;
-use App\Entity\User;
+use App\Entity\AppUser;
 use App\Entity\Cart;
 
 class A04CartFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $users = $manager->getRepository(User::class)->findAll();
+        $users = $manager->getRepository(AppUser::class)->findAll();
         $books = $manager->getRepository(Book::class)->findAll();
 
         foreach ($users as $user) {
