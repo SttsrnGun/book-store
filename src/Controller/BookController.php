@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Enum\BookTag;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use App\Entity\User;
+use App\Entity\AppUser;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class BookController extends AbstractController

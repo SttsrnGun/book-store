@@ -27,7 +27,7 @@ class Cart
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="carts")
+     * @ORM\ManyToOne(targetEntity=AppUser::class, inversedBy="carts")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -53,12 +53,12 @@ class Cart
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?AppUser
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?AppUser $user): self
     {
         $this->user = $user;
 

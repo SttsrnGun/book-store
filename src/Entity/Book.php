@@ -81,7 +81,7 @@ class Book
     private $carts;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\ManyToOne(targetEntity=AppUser::class)
      */
     private $owner;
 
@@ -265,12 +265,12 @@ class Book
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getOwner(): ?AppUser
     {
         return $this->owner;
     }
 
-    public function setOwner(?User $owner): self
+    public function setOwner(?AppUser $owner): self
     {
         $this->owner = $owner;
 
