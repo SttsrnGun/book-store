@@ -1,1 +1,1 @@
-web: heroku-php-apache2 public/ & php bin/console lexik:jwt:generate-keypair wait -n
+web: heroku-php-apache2 public/
